@@ -9,8 +9,10 @@ Under development
 - easy querying
 - clean up unused resources
 
+```
 <Query>
   Loading = integer (1: initial, 2: pagination)
   Paginate = { fetch: () => mixed, hasAny: boolean };
   Pagination = { next: Paginate, prev: Paginate };
-  children: (props: { loading: Loading, error, data, pagination: Pagination }
+  children: (props: { loading: Loading, error, data, pagination: Pagination })
+```
