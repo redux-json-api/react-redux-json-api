@@ -1,5 +1,5 @@
 {
-  "name": "redux-json-api-scope",
+  "name": "react-redux-json-api",
   "version": "0.1.0",
   "description": "Easy data handling for redux-json-api",
   "browser": "lib/index.js",
