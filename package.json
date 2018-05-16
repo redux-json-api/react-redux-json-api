@@ -2,6 +2,7 @@
   "name": "redux-json-api-scope",
   "version": "0.1.0",
   "description": "Easy data handling for redux-json-api",
+  "browser": "lib/index.js",
   "main": "lib/index.js",
   "author": "Ronni Egeriis Persson <ronni@egeriis.me>",
   "license": "MIT",
@@ -12,5 +13,31 @@
   "bugs": {
     "url": "https://github.com/redux-json-api/redux-json-api-scope/issues"
   },
-  "homepage": "https://github.com/redux-json-api/redux-json-api-scope#readme"
+  "homepage": "https://github.com/redux-json-api/redux-json-api-scope#readme",
+  "scripts": {
+    "build": "yarn run ci && rimraf lib/* && rollup -c",
+    "ci": "yarn run test && yarn run lint",
+    "lint": "eslint . ./",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "7",
+    "babel-jest": "^22.4.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-flowtype": "^2.46.3",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.8.2",
+    "flow-bin": "^0.72.0",
+    "jest": "^22.4.3",
+    "regenerator-runtime": "^0.11.1",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.56.4"
+  }
 }
