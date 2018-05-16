@@ -1,0 +1,16 @@
+{
+  "name": "redux-json-api-scope",
+  "version": "0.1.0",
+  "description": "Easy data handling for redux-json-api",
+  "main": "lib/index.js",
+  "author": "Ronni Egeriis Persson <ronni@egeriis.me>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:redux-json-api/redux-json-api-scope.git"
+  },
+  "bugs": {
+    "url": "https://github.com/redux-json-api/redux-json-api-scope/issues"
+  },
+  "homepage": "https://github.com/redux-json-api/redux-json-api-scope#readme"
+}
