@@ -20,6 +20,9 @@
     "lint": "eslint . ./",
     "test": "jest"
   },
+  "jest": {
+    "testEnvironment": "enzyme"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
@@ -28,16 +31,32 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-jest-enzyme": "^6.0.0",
     "eslint-plugin-flowtype": "^2.46.3",
     "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jest": "^21.15.1",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.8.2",
     "flow-bin": "^0.72.0",
+    "flow-typed": "^2.4.0",
     "jest": "^22.4.3",
+    "jest-environment-enzyme": "^6.0.0",
+    "jest-enzyme": "^6.0.0",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "redux-thunk": "^2.2.0",
     "regenerator-runtime": "^0.11.1",
     "rimraf": "^2.6.2",
     "rollup": "^0.56.4"
+  },
+  "dependencies": {
+    "redux-json-api": "^2.0.0-beta.5"
+  },
+  "peerDependencies": {
+    "react": "^16.3.2"
   }
 }
