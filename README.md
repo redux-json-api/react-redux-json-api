@@ -7,6 +7,8 @@ Under development
 	- i.e. also maintains a state of particular set of resources
 	- resources are still kept in a single place, no duplicates
 - easy querying
+	- just put in the endpoint, e.g. `<Query readFrom="/posts">`
+	- easy access to related resources (`posts.comments[n].author.name`)
 - clean up unused resources
 
 ```
