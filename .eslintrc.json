@@ -9,7 +9,9 @@
         "jest"
     ],
     "rules": {
-        "react/jsx-filename-extension": [1, { "extensions": [".js"] }]
+        "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
+        "import/extensions": [2, "ignorePackages"],
+        "import/no-unresolved": [2, { "ignore": ["json-api"] }]
     },
     "overrides": [
         {
@@ -24,5 +26,13 @@
                 "jest/globals": true
             }
         }
-    ]
+    ],
+    "settings": {
+        "import/extensions": [
+            ".js"
+        ],
+        "import/ignore": [
+            "json-api"
+        ]
+    }
 }

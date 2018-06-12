@@ -2,7 +2,13 @@
   "presets": [["env", {"modules": false}], "flow", "react"],
   "env": {
     "test": {
-      "presets": ["env", "flow", "react"]
+      "presets": ["env", "flow", "react"],
+      "plugins": [
+        "transform-class-properties"
+      ]
     }
-  }
+  },
+  "plugins": [
+    "transform-class-properties"
+  ]
 }
