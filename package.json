@@ -60,7 +60,7 @@
     "rollup": "^0.56.4"
   },
   "dependencies": {
-    "redux-json-api": "^2.0.0-beta.5"
+    "redux-json-api": "^2.0.0"
   },
   "peerDependencies": {
     "react": "^16.3.2"
