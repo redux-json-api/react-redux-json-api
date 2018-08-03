@@ -13,6 +13,7 @@ jest.mock('redux-json-api', () => ({
 
 beforeEach(() => {
   props = {
+    children: () => <div />,
     dispatch: jest.fn(io => io),
     endpoint: '/posts',
   };

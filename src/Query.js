@@ -1,13 +1,13 @@
 /* @flow */
 
-import type { JsonApiResource } from 'json-api';
+import type { JSONAPIResource } from 'json-api';
 import React, { type Node, PureComponent } from 'react';
 import { readEndpoint } from 'redux-json-api';
 import DataSet from './DataSet';
 
 export type RenderProp = ({
   loading: boolean,
-  resources: Array<JsonApiResource<any>>
+  resources: Array<JSONAPIResource>
 }) => Node
 
 type Props = {|
@@ -21,6 +21,10 @@ type State = {|
 |};
 
 class Query extends PureComponent<Props, State> {
+  state = {
+    resourceIds: [],
+  };
+
   componentDidMount() {
     this.fetchData();
   }

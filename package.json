@@ -54,13 +54,17 @@
     "jest-enzyme": "^6.0.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "redux": "^4.0.0",
+    "redux-mock-store": "^1.5.3",
     "redux-thunk": "^2.2.0",
     "regenerator-runtime": "^0.11.1",
     "rimraf": "^2.6.2",
     "rollup": "^0.56.4"
   },
   "dependencies": {
-    "redux-json-api": "^2.0.0"
+    "react-redux": "^5.0.7",
+    "redux-json-api": "^2.0.0",
+    "reselect": "^3.0.1"
   },
   "peerDependencies": {
     "react": "^16.3.2"

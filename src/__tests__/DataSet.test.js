@@ -1,14 +1,19 @@
 /* @flow */
 import React from 'react';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import { mount } from 'enzyme';
-import type { JsonApiResource } from 'json-api';
-import DataSet from '../DataSet';
+import type { JSONAPIResource } from 'json-api';
+import ConnectedDataSet, { DataSet } from '../DataSet';
 
-type User = JsonApiResource<'users', {
-  name: string
-}>;
+let mockResources;
+jest.mock('../selectors', () => ({
+  selectResources: () => mockResources,
+}));
 
-const createMockUser = (name: string): User => ({
+const mockStore = configureStore([thunk]);
+
+const createMockUser = (name: string): JSONAPIResource => ({
   type: 'users',
   id: '1',
   attributes: {
@@ -16,9 +21,26 @@ const createMockUser = (name: string): User => ({
   },
 });
 
+beforeEach(() => {
+  mockResources = undefined;
+});
+
+it('should pass specified resource to render prop', () => {
+  const child = jest.fn(() => <div />);
+  const resources = [createMockUser('Line')];
+  mockResources = resources;
+  mount(<ConnectedDataSet
+    resourceIds={resources.map(({ id, type }) => ({ id, type }))}
+    store={mockStore({})}
+  >
+    {child}
+  </ConnectedDataSet>);
+  expect(child).toHaveBeenCalledWith({ loading: false, resources });
+});
+
 it('should pass resources to render prop', () => {
   const child = jest.fn(() => <div />);
-  const resources: Array<User> = [createMockUser('name')];
+  const resources: Array<JSONAPIResource> = [createMockUser('name')];
   mount(<DataSet resources={resources}>{child}</DataSet>);
   expect(child).toHaveBeenCalledWith({ loading: false, resources });
 });
