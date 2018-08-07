@@ -1,17 +1,15 @@
 /* @flow */
 import React from 'react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
 import type { JSONAPIResource } from 'json-api';
 import ConnectedDataSet, { DataSet } from '../DataSet';
+import { mockStore } from './utils';
 
 let mockResources;
 jest.mock('../selectors', () => ({
   selectResources: () => mockResources,
 }));
-
-const mockStore = configureStore([thunk]);
 
 const createMockUser = (name: string): JSONAPIResource => ({
   type: 'users',
@@ -29,12 +27,16 @@ it('should pass specified resource to render prop', () => {
   const child = jest.fn(() => <div />);
   const resources = [createMockUser('Line')];
   mockResources = resources;
-  mount(<ConnectedDataSet
-    resourceIds={resources.map(({ id, type }) => ({ id, type }))}
-    store={mockStore({})}
-  >
-    {child}
-  </ConnectedDataSet>);
+  mount(
+    <Provider store={mockStore({})}>
+      <ConnectedDataSet
+        loading={false}
+        resourceIds={resources.map(({ id, type }) => ({ id, type }))}
+      >
+        {child}
+      </ConnectedDataSet>
+    </Provider>,
+  );
   expect(child).toHaveBeenCalledWith({ loading: false, resources });
 });
 
