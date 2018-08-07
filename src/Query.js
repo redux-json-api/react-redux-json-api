@@ -17,11 +17,13 @@ type Props = {|
 |};
 
 type State = {|
+  loading: boolean,
   resourceIds: Array<any>,
 |};
 
 class Query extends PureComponent<Props, State> {
   state = {
+    loading: false,
     resourceIds: [],
   };
 
@@ -31,21 +33,23 @@ class Query extends PureComponent<Props, State> {
 
   fetchData = async () => {
     const { dispatch, endpoint } = this.props;
+    this.setState({ loading: true });
     try {
       const { data } = await dispatch(readEndpoint(endpoint));
       const resources = Array.isArray(data) ? data : [data];
       this.setState({
+        loading: false,
         resourceIds: resources.map(({ id, type }) => ({ id, type })),
       });
     } catch (e) {
-      console.log(e);
+      this.setState({ loading: false });
     }
-    return null;
   };
 
   render() {
+    const { loading, resourceIds } = this.state;
     return (
-      <DataSet resourceIds={this.state.resourceIds}>
+      <DataSet loading={loading} resourceIds={resourceIds}>
         {this.props.children}
       </DataSet>
     );

@@ -28,7 +28,9 @@ it('renders without throwing', () => {
 });
 
 it('mounts without throwing with react-redux Provider supplied', () => {
-  expect(() => mount(<Provider store={mockStore({})}><Query {...props} /></Provider>)).not.toThrow();
+  expect(() => mount(
+    <Provider store={mockStore({})}><Query {...props} /></Provider>,
+  )).not.toThrow();
 });
 
 it('calls readEndpoint with given path', () => {
@@ -36,14 +38,32 @@ it('calls readEndpoint with given path', () => {
   expect(props.dispatch).toHaveBeenCalledWith(readEndpoint(props.endpoint));
 });
 
-it('saves ids of returned resources to state', () => {
+it('saves ids of returned resources to state', async () => {
   mockReadEndpoint = Promise.resolve({
     data: [
       { type: 'users', id: '1', attributes: { name: 'Wonderwoman' } },
     ],
   });
   const wrapper = shallow(<Query {...props} />);
-  setTimeout(() => {
-    expect(wrapper.state.resourceIds).toEqual([{ type: 'users', id: '1' }]);
-  }, 1);
+  await mockReadEndpoint;
+  expect(wrapper.state('resourceIds')).toEqual([{ type: 'users', id: '1' }]);
+});
+
+it('updates loading state upon fetch initialization', () => {
+  const wrapper = shallow(<Query {...props} />);
+  expect(wrapper.state('loading')).toBe(true);
+});
+
+it('updates loading state when fetch has succeeded', async () => {
+  mockReadEndpoint = Promise.resolve({ data: { type: 'users', id: '1' } });
+  const wrapper = shallow(<Query {...props} />);
+  await mockReadEndpoint;
+  expect(wrapper.state('loading')).toBe(false);
+});
+
+it('updates loading state when fetch fails', async () => {
+  mockReadEndpoint = () => Promise.reject(new Error('fail'));
+  const wrapper = shallow(<Query {...props} />);
+  await mockReadEndpoint;
+  expect(wrapper.state('loading')).toBe(false);
 });
