@@ -95,7 +95,7 @@ declare module 'json-api' {
   };
 
   declare type JSONAPIResource = {|
-    id?: string,
+    id: string,
     type: string,
     attributes?: JSONAPIAttributes,
     relationships?: JSONAPIRelationships,
