@@ -26,6 +26,9 @@
     "testEnvironmentOptions": {
       "enzymeAdapter": "react16"
     },
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
     "verbose": true
   },
   "devDependencies": {
