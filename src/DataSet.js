@@ -1,18 +1,27 @@
 /* @flow */
 
-import { PureComponent } from 'react';
+import { PureComponent, type ComponentType } from 'react';
 import { connect } from 'react-redux';
 import type { JSONAPIResource, JSONAPIResourceIdentifier } from 'json-api';
 import type { RenderProp } from './Query';
 import { selectResources } from './selectors';
 
-type Props = {
+type CommonProps = {|
   children: RenderProp,
   loading: boolean,
-  resources: Array<JSONAPIResource>
-};
+|};
 
-export class DataSet extends PureComponent<Props> {
+type ConnectedProps = {|
+  ...CommonProps,
+  resources: Array<JSONAPIResource>
+|};
+
+type Props = {|
+  ...CommonProps,
+  resourceIds: Array<JSONAPIResourceIdentifier>
+|};
+
+export class DataSet extends PureComponent<ConnectedProps> {
   static defaultProps = {
     loading: false,
   };
@@ -30,4 +39,4 @@ const mapStateToProps = (state, props) => ({
   resources: selectResources(state, props),
 });
 
-export default connect(mapStateToProps)(DataSet);
+export default (connect(mapStateToProps)(DataSet): ComponentType<Props>);
