@@ -11,7 +11,8 @@
     "rules": {
         "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
         "import/extensions": [2, "ignorePackages"],
-        "import/no-unresolved": [2, { "ignore": ["json-api"] }]
+        "import/no-unresolved": [2, { "ignore": ["json-api"] }],
+        "import/prefer-default-export": 0
     },
     "overrides": [
         {
