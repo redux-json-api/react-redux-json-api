@@ -9,6 +9,7 @@
         "jest"
     ],
     "rules": {
+        "function-paren-newline": [2, "consistent"],
         "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
         "import/extensions": [2, "ignorePackages"],
         "import/no-unresolved": [2, { "ignore": ["json-api"] }],
