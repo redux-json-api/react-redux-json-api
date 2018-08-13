@@ -1,7 +1,9 @@
 /* @flow */
+// Add `strict` once Dispatch type is added
 
-import type { JSONAPIResource } from 'json-api';
+import type { JSONAPIResource, JSONAPIResourceIdentifier } from 'json-api';
 import React, { type Node, PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { readEndpoint } from 'redux-json-api';
 import DataSet from './DataSet';
 
@@ -18,7 +20,7 @@ type Props = {|
 
 type State = {|
   loading: boolean,
-  resourceIds: Array<any>,
+  resourceIds: Array<JSONAPIResourceIdentifier>,
 |};
 
 class Query extends PureComponent<Props, State> {
@@ -28,6 +30,8 @@ class Query extends PureComponent<Props, State> {
   };
 
   componentDidMount() {
+    console.log('componentDidMount');
+
     this.fetchData();
   }
 
@@ -35,13 +39,17 @@ class Query extends PureComponent<Props, State> {
     const { dispatch, endpoint } = this.props;
     this.setState({ loading: true });
     try {
-      const { data } = await dispatch(readEndpoint(endpoint));
+      const { body: { data } } = await dispatch(readEndpoint(endpoint));
       const resources = Array.isArray(data) ? data : [data];
+      console.log('resources', resources);
+
       this.setState({
         loading: false,
         resourceIds: resources.map(({ id, type }) => ({ id, type })),
       });
     } catch (e) {
+      console.error(e);
+
       this.setState({ loading: false });
     }
   };
@@ -56,4 +64,4 @@ class Query extends PureComponent<Props, State> {
   }
 }
 
-export default Query;
+export default connect()(Query);

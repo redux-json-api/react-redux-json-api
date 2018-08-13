@@ -1,4 +1,4 @@
-/* @flow */
+/* @flow strict-local */
 
 import { PureComponent, type ComponentType } from 'react';
 import { connect } from 'react-redux';

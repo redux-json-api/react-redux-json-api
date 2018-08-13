@@ -40,9 +40,11 @@ it('calls readEndpoint with given path', () => {
 
 it('saves ids of returned resources to state', async () => {
   mockReadEndpoint = Promise.resolve({
-    data: [
-      { type: 'users', id: '1', attributes: { name: 'Wonderwoman' } },
-    ],
+    body: {
+      data: [
+        { type: 'users', id: '1', attributes: { name: 'Wonderwoman' } },
+      ],
+    },
   });
   const wrapper = shallow(<Query {...props} />);
   await mockReadEndpoint;

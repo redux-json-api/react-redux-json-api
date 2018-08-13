@@ -18,3 +18,15 @@ Under development
   Pagination = { next: Paginate, prev: Paginate };
   children: (props: { loading: Loading, error, data, pagination: Pagination })
 ```
+
+## Usage Example
+
+```js
+import Query from 'react-redux-json-api';
+
+const BlogPosts = () => (
+  <Query readFrom="/blog-posts">
+    {({ resources }) => <ul>{resources.map(post => <li>{post.title}</li>)}</ul>}
+  </Query>
+);
+```

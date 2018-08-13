@@ -1,4 +1,4 @@
-/* @flow */
+/* @flow strict */
 
 import { createSelector } from 'reselect';
 import type { JSONAPIResourceIdentifier } from 'json-api';
@@ -13,6 +13,3 @@ export const selectResources = createSelector(
     api[resourceId.type].data.find(resource =>
       resource.id === resourceId.id)),
 );
-
-// dummy
-export const someOtherSelect = createSelector();

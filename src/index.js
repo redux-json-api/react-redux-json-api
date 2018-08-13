@@ -1,4 +1,5 @@
 /* @flow strict */
-import something from './something';
 
-console.log(something('hello'));
+import Query from './Query';
+
+export default Query;
