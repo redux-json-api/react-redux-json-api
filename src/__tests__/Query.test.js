@@ -3,7 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { readEndpoint } from 'redux-json-api';
 import { mount, shallow } from 'enzyme';
-import Query from '../Query';
+import { Query } from '../Query';
 import { mockStore } from './utils';
 
 let mockReadEndpoint;
@@ -15,12 +15,17 @@ jest.mock('redux-json-api', () => ({
 
 beforeEach(() => {
   props = {
+    cacheEnabled: false,
     children: () => <div />,
     dispatch: jest.fn(io => io),
     endpoint: '/posts',
   };
 
-  mockReadEndpoint = Promise.resolve({ data: [] });
+  mockReadEndpoint = Promise.resolve({ body: { data: [] } });
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 it('renders without throwing', () => {
@@ -41,9 +46,7 @@ it('calls readEndpoint with given path', () => {
 it('saves ids of returned resources to state', async () => {
   mockReadEndpoint = Promise.resolve({
     body: {
-      data: [
-        { type: 'users', id: '1', attributes: { name: 'Wonderwoman' } },
-      ],
+      data: [{ type: 'users', id: '1', attributes: { name: 'Wonderwoman' } }],
     },
   });
   const wrapper = shallow(<Query {...props} />);
@@ -57,7 +60,9 @@ it('updates loading state upon fetch initialization', () => {
 });
 
 it('updates loading state when fetch has succeeded', async () => {
-  mockReadEndpoint = Promise.resolve({ data: { type: 'users', id: '1' } });
+  mockReadEndpoint = Promise.resolve({
+    body: { data: { type: 'users', id: '1' } },
+  });
   const wrapper = shallow(<Query {...props} />);
   await mockReadEndpoint;
   expect(wrapper.state('loading')).toBe(false);
@@ -68,4 +73,14 @@ it('updates loading state when fetch fails', async () => {
   const wrapper = shallow(<Query {...props} />);
   await mockReadEndpoint;
   expect(wrapper.state('loading')).toBe(false);
+});
+
+it('only makes once request for same endpoint when requested more times', async () => {
+  mockReadEndpoint = Promise.resolve({
+    body: { data: { type: 'users', id: '1' } },
+  });
+  shallow(<Query {...props} cacheEnabled />);
+  await mockReadEndpoint;
+  shallow(<Query {...props} cacheEnabled />);
+  expect(readEndpoint).toHaveBeenCalledTimes(1);
 });

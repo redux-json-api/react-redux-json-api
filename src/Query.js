@@ -6,58 +6,78 @@ import React, { type Node, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { readEndpoint } from 'redux-json-api';
 import DataSet from './DataSet';
+import QueryCache from './QueryCache';
 
 export type RenderProp = ({
+  error?: Error,
   loading: boolean,
   resources: Array<JSONAPIResource>
 }) => Node
 
 type Props = {|
+  cacheEnabled: boolean,
   children: RenderProp,
   dispatch: (...any) => any,
   endpoint: string,
 |};
 
 type State = {|
+  error?: Error,
   loading: boolean,
   resourceIds: Array<JSONAPIResourceIdentifier>,
 |};
 
-class Query extends PureComponent<Props, State> {
+export class Query extends PureComponent<Props, State> {
+  static defaultProps = {
+    cacheEnabled: false,
+  };
+
   state = {
+    error: undefined,
     loading: false,
     resourceIds: [],
   };
 
   componentDidMount() {
-    console.log('componentDidMount');
+    const { cacheEnabled, endpoint } = this.props;
 
-    this.fetchData();
+    if (!cacheEnabled) {
+      this.fetchData(endpoint, cacheEnabled);
+      return;
+    }
+
+    try {
+      QueryCache.getEndpointCache(endpoint);
+    } catch (_) {
+      this.fetchData(endpoint, cacheEnabled);
+    }
   }
 
-  fetchData = async () => {
-    const { dispatch, endpoint } = this.props;
+  fetchData = async (endpoint: string, cache: boolean = true) => {
+    const { dispatch } = this.props;
     this.setState({ loading: true });
     try {
       const { body: { data } } = await dispatch(readEndpoint(endpoint));
       const resources = Array.isArray(data) ? data : [data];
-      console.log('resources', resources);
+      const resourceIds = resources.map(({ id, type }) => ({ id, type }));
 
       this.setState({
         loading: false,
-        resourceIds: resources.map(({ id, type }) => ({ id, type })),
+        resourceIds,
       });
-    } catch (e) {
-      console.error(e);
 
-      this.setState({ loading: false });
+      if (cache) {
+        QueryCache.cacheEndpoint(endpoint, resourceIds);
+      }
+    } catch (error) {
+      this.setState({ error, loading: false });
     }
   };
 
   render() {
-    const { loading, resourceIds } = this.state;
+    const { error, loading, resourceIds } = this.state;
     return (
-      <DataSet loading={loading} resourceIds={resourceIds}>
+      <DataSet error={error} loading={loading} resourceIds={resourceIds}>
         {this.props.children}
       </DataSet>
     );
