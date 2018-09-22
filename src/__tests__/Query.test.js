@@ -84,3 +84,19 @@ it('only makes once request for same endpoint when requested more times', async 
   shallow(<Query {...props} cacheEnabled />);
   expect(readEndpoint).toHaveBeenCalledTimes(1);
 });
+
+it('cached on links.self if provided', async () => {
+  const self = '/users?result-hash=abcdef0123456789';
+  mockReadEndpoint = Promise.resolve({
+    body: {
+      links: {
+        self,
+      },
+      data: { type: 'users', id: '1' },
+    },
+  });
+  shallow(<Query {...props} endpoint="/users" cacheEnabled />);
+  await mockReadEndpoint;
+  shallow(<Query {...props} endpoint={self} cacheEnabled />);
+  expect(readEndpoint).toHaveBeenCalledTimes(1);
+});

@@ -57,7 +57,7 @@ export class Query extends PureComponent<Props, State> {
     const { dispatch } = this.props;
     this.setState({ loading: true });
     try {
-      const { body: { data } } = await dispatch(readEndpoint(endpoint));
+      const { body: { data, links } } = await dispatch(readEndpoint(endpoint));
       const resources = Array.isArray(data) ? data : [data];
       const resourceIds = resources.map(({ id, type }) => ({ id, type }));
 
@@ -67,7 +67,8 @@ export class Query extends PureComponent<Props, State> {
       });
 
       if (cache) {
-        QueryCache.cacheEndpoint(endpoint, resourceIds);
+        const cacheEndpoint = (links && links.hasOwnProperty('self') && links.self) || endpoint;
+        QueryCache.cacheEndpoint(cacheEndpoint, resourceIds);
       }
     } catch (error) {
       this.setState({ error, loading: false });
