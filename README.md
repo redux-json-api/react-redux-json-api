@@ -10,6 +10,8 @@ Under development
 	- just put in the endpoint, e.g. `<Query readFrom="/posts">`
 	- easy access to related resources (`posts.comments[n].author.name`)
 - clean up unused resources
+- better than connect/thunk/request pattern
+	- use `Query` as the "container", no need to dispatch actions for API requests
 
 ```
 <Query>
