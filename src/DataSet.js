@@ -7,6 +7,7 @@ import type { RenderProp } from './Query';
 import { selectResources } from './selectors';
 
 type CommonProps = {|
+  error?: Error,
   children: RenderProp,
   loading: boolean,
 |};
@@ -27,8 +28,15 @@ export class DataSet extends PureComponent<ConnectedProps> {
   };
 
   render() {
-    const { children, loading, resources } = this.props;
+    const {
+      children,
+      error,
+      loading,
+      resources,
+    } = this.props;
+
     return children({
+      error,
       loading,
       resources,
     });
