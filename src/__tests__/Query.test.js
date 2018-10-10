@@ -15,7 +15,7 @@ jest.mock('redux-json-api', () => ({
 
 beforeEach(() => {
   props = {
-    cacheEnabled: false,
+    enableCache: false,
     children: () => <div />,
     dispatch: jest.fn(io => io),
     endpoint: '/posts',
@@ -79,9 +79,9 @@ it('only makes once request for same endpoint when requested more times', async 
   mockReadEndpoint = Promise.resolve({
     body: { data: { type: 'users', id: '1' } },
   });
-  shallow(<Query {...props} cacheEnabled />);
+  shallow(<Query {...props} enableCache />);
   await mockReadEndpoint;
-  shallow(<Query {...props} cacheEnabled />);
+  shallow(<Query {...props} enableCache />);
   expect(readEndpoint).toHaveBeenCalledTimes(1);
 });
 
@@ -95,8 +95,8 @@ it('cached on links.self if provided', async () => {
       data: { type: 'users', id: '1' },
     },
   });
-  shallow(<Query {...props} endpoint="/users" cacheEnabled />);
+  shallow(<Query {...props} endpoint="/users" enableCache />);
   await mockReadEndpoint;
-  shallow(<Query {...props} endpoint={self} cacheEnabled />);
+  shallow(<Query {...props} endpoint={self} enableCache />);
   expect(readEndpoint).toHaveBeenCalledTimes(1);
 });

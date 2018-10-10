@@ -3,13 +3,14 @@
 import { PureComponent, type ComponentType } from 'react';
 import { connect } from 'react-redux';
 import type { JSONAPIResource, JSONAPIResourceIdentifier } from 'json-api';
-import type { RenderProp } from './Query';
+import type { Links, RenderProp } from './Query';
 import { selectResources } from './selectors';
 
 type CommonProps = {|
   error?: Error,
   children: RenderProp,
   loading: boolean,
+  links: Links
 |};
 
 type ConnectedProps = {|
@@ -32,12 +33,14 @@ export class DataSet extends PureComponent<ConnectedProps> {
       children,
       error,
       loading,
+      links,
       resources,
     } = this.props;
 
     return children({
       error,
       loading,
+      links,
       resources,
     });
   }

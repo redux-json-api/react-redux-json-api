@@ -1,14 +1,12 @@
 /* @flow strict-local */
 
-import type { JSONAPIResourceIdentifier } from 'json-api';
-
-type ResourceIds = Array<JSONAPIResourceIdentifier>;
+import type { StoredResponse } from './Query';
 
 export default class QueryCache {
-  static cachedEndpoints: Map<string, ResourceIds> = new Map();
+  static cachedEndpoints: Map<string, StoredResponse> = new Map();
 
-  static cacheEndpoint(endpoint: string, resourceIds: ResourceIds) {
-    QueryCache.cachedEndpoints.set(endpoint, resourceIds);
+  static cacheEndpoint(endpoint: string, response: StoredResponse) {
+    QueryCache.cachedEndpoints.set(endpoint, response);
   }
 
   static getEndpointCache(endpoint: string) {

@@ -8,52 +8,91 @@ import { readEndpoint } from 'redux-json-api';
 import DataSet from './DataSet';
 import QueryCache from './QueryCache';
 
+type Link = {|
+  load: () => void,
+|};
+
+export type Links = { [string]: Link };
+
+export type StoredResponse = {|
+  links: Links,
+  resourceIds: Array<JSONAPIResourceIdentifier>,
+|};
+
 export type RenderProp = ({
   error?: Error,
   loading: boolean,
+  links: Links,
   resources: Array<JSONAPIResource>
 }) => Node
 
 type Props = {|
-  cacheEnabled: boolean,
   children: RenderProp,
   dispatch: (...any) => any,
+  enableCache: boolean,
   endpoint: string,
 |};
 
 type State = {|
   error?: Error,
   loading: boolean,
-  resourceIds: Array<JSONAPIResourceIdentifier>,
+  ...StoredResponse,
 |};
 
 export class Query extends PureComponent<Props, State> {
   static defaultProps = {
-    cacheEnabled: false,
+    enableCache: false,
   };
 
   state = {
     error: undefined,
     loading: false,
+    links: {},
     resourceIds: [],
   };
 
   componentDidMount() {
-    const { cacheEnabled, endpoint } = this.props;
+    this.loadEndpoint(this.props.endpoint);
+  }
 
-    if (!cacheEnabled) {
-      this.fetchData(endpoint, cacheEnabled);
+  setResponse = ({ resourceIds, links }: StoredResponse) => {
+    this.setState({
+      resourceIds,
+      links,
+    });
+  };
+
+  createLinksObject = (links: { [string]: string }) => (
+    Object.keys(links).filter(link => link !== 'self').reduce(
+      (carry, link) => Object.assign({
+        [link]: {
+          load: () => this.loadEndpoint(links[link]),
+        },
+      }, carry),
+      {},
+    )
+  );
+
+  loadEndpoint = (
+    endpoint: string,
+    enableCache: boolean = this.props.enableCache,
+  ) => {
+    if (!enableCache) {
+      this.fetchData(endpoint, enableCache);
       return;
     }
 
     try {
-      QueryCache.getEndpointCache(endpoint);
+      this.setResponse(QueryCache.getEndpointCache(endpoint));
     } catch (_) {
-      this.fetchData(endpoint, cacheEnabled);
+      this.fetchData(endpoint, enableCache);
     }
-  }
+  };
 
-  fetchData = async (endpoint: string, cache: boolean = true) => {
+  fetchData = async (
+    endpoint: string,
+    enableCache: boolean = this.props.enableCache,
+  ) => {
     const { dispatch } = this.props;
     this.setState({ loading: true });
     try {
@@ -63,12 +102,18 @@ export class Query extends PureComponent<Props, State> {
 
       this.setState({
         loading: false,
-        resourceIds,
       });
 
-      if (cache) {
+      const response = {
+        resourceIds,
+        links: links ? this.createLinksObject(links) : {},
+      };
+
+      this.setResponse(response);
+
+      if (enableCache) {
         const cacheEndpoint = (links && links.hasOwnProperty('self') && links.self) || endpoint;
-        QueryCache.cacheEndpoint(cacheEndpoint, resourceIds);
+        QueryCache.cacheEndpoint(cacheEndpoint, response);
       }
     } catch (error) {
       this.setState({ error, loading: false });
@@ -76,9 +121,15 @@ export class Query extends PureComponent<Props, State> {
   };
 
   render() {
-    const { error, loading, resourceIds } = this.state;
+    const {
+      error,
+      loading,
+      links,
+      resourceIds,
+    } = this.state;
+
     return (
-      <DataSet error={error} loading={loading} resourceIds={resourceIds}>
+      <DataSet error={error} loading={loading} links={links} resourceIds={resourceIds}>
         {this.props.children}
       </DataSet>
     );
