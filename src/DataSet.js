@@ -1,46 +1,32 @@
 /* @flow strict-local */
 
-import { PureComponent, type ComponentType } from 'react';
+import { PureComponent, type ComponentType, type Node } from 'react';
 import { connect } from 'react-redux';
 import type { JSONAPIResource, JSONAPIResourceIdentifier } from 'json-api';
-import type { Links, RenderProp } from './Query';
 import { selectResources } from './selectors';
 
 type CommonProps = {|
-  error?: Error,
-  children: RenderProp,
-  loading: boolean,
-  links: Links
+  children: ({ resources: Array<JSONAPIResource> }) => Node,
 |};
 
 type ConnectedProps = {|
-  ...CommonProps,
-  resources: Array<JSONAPIResource>
+  resources: Array<JSONAPIResource>,
+  ...CommonProps
 |};
 
 type Props = {|
-  ...CommonProps,
-  resourceIds: Array<JSONAPIResourceIdentifier>
+  resourceIds: Array<JSONAPIResourceIdentifier>,
+  ...CommonProps
 |};
 
 export class DataSet extends PureComponent<ConnectedProps> {
-  static defaultProps = {
-    loading: false,
-  };
-
   render() {
     const {
       children,
-      error,
-      loading,
-      links,
       resources,
     } = this.props;
 
     return children({
-      error,
-      loading,
-      links,
       resources,
     });
   }

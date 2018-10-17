@@ -30,27 +30,26 @@ it('should pass specified resource to render prop', () => {
   mount(
     <Provider store={mockStore({})}>
       <ConnectedDataSet
-        loading={false}
         resourceIds={resources.map(({ id, type }) => ({ id, type }))}
       >
         {child}
       </ConnectedDataSet>
     </Provider>,
   );
-  expect(child).toHaveBeenCalledWith({ loading: false, resources });
+  expect(child).toHaveBeenCalledWith({ resources });
 });
 
 it('should pass resources to render prop', () => {
   const child = jest.fn(() => <div />);
   const resources: Array<JSONAPIResource> = [createMockUser('name')];
   mount(<DataSet resources={resources}>{child}</DataSet>);
-  expect(child).toHaveBeenCalledWith({ loading: false, resources });
+  expect(child).toHaveBeenCalledWith({ resources });
 });
 
 it('should pass loading status to render prop', () => {
   const child = jest.fn(() => <div />);
-  mount(<DataSet loading resources={[]}>{child}</DataSet>);
-  expect(child).toHaveBeenCalledWith({ loading: true, resources: [] });
+  mount(<DataSet resources={[]}>{child}</DataSet>);
+  expect(child).toHaveBeenCalledWith({ resources: [] });
 });
 
 // `Query` calls `readEndpoint`

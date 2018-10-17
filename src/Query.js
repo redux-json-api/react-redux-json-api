@@ -12,17 +12,20 @@ type Link = {|
   load: () => void,
 |};
 
-export type Links = { [string]: Link };
+type Links = { [string]: Link };
+
+type Refetch = () => void;
 
 export type StoredResponse = {|
   links: Links,
   resourceIds: Array<JSONAPIResourceIdentifier>,
 |};
 
-export type RenderProp = ({
+type RenderProp = ({
   error?: Error,
   loading: boolean,
   links: Links,
+  refetch: Refetch,
   resources: Array<JSONAPIResource>
 }) => Node
 
@@ -120,6 +123,10 @@ export class Query extends PureComponent<Props, State> {
     }
   };
 
+  refetch = () => {
+    this.fetchData(this.props.endpoint);
+  };
+
   render() {
     const {
       error,
@@ -129,8 +136,14 @@ export class Query extends PureComponent<Props, State> {
     } = this.state;
 
     return (
-      <DataSet error={error} loading={loading} links={links} resourceIds={resourceIds}>
-        {this.props.children}
+      <DataSet resourceIds={resourceIds}>
+        {({ resources }) => this.props.children({
+          error,
+          loading,
+          links,
+          refetch: this.refetch,
+          resources,
+        })}
       </DataSet>
     );
   }

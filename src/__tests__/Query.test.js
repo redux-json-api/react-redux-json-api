@@ -75,7 +75,7 @@ it('updates loading state when fetch fails', async () => {
   expect(wrapper.state('loading')).toBe(false);
 });
 
-it('only makes once request for same endpoint when requested more times', async () => {
+it('only makes one request for same endpoint when requested multiple times', async () => {
   mockReadEndpoint = Promise.resolve({
     body: { data: { type: 'users', id: '1' } },
   });
@@ -85,7 +85,7 @@ it('only makes once request for same endpoint when requested more times', async 
   expect(readEndpoint).toHaveBeenCalledTimes(1);
 });
 
-it('cached on links.self if provided', async () => {
+it('caches on links.self if provided', async () => {
   const self = '/users?result-hash=abcdef0123456789';
   mockReadEndpoint = Promise.resolve({
     body: {
@@ -99,4 +99,21 @@ it('cached on links.self if provided', async () => {
   await mockReadEndpoint;
   shallow(<Query {...props} endpoint={self} enableCache />);
   expect(readEndpoint).toHaveBeenCalledTimes(1);
+});
+
+it('is able to refetch from original endpoint', () => {
+  let renderRefetch;
+  mount(
+    <Provider store={mockStore({})}>
+      <Query {...props}>
+        {({ refetch }) => {
+          renderRefetch = refetch;
+          return <div />;
+        }}
+      </Query>
+    </Provider>,
+  );
+  renderRefetch();
+  expect(readEndpoint).toHaveBeenCalledWith('/posts');
+  expect(readEndpoint).toHaveBeenCalledTimes(2);
 });
