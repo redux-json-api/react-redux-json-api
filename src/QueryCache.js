@@ -1,11 +1,11 @@
 /* @flow strict-local */
 
-import type { StoredResponse } from './Query';
+import type { CachedResponse } from './types';
 
 export default class QueryCache {
-  static cachedEndpoints: Map<string, StoredResponse> = new Map();
+  static cachedEndpoints: Map<string, CachedResponse> = new Map();
 
-  static cacheEndpoint(endpoint: string, response: StoredResponse) {
+  static cacheEndpoint(endpoint: string, response: CachedResponse) {
     QueryCache.cachedEndpoints.set(endpoint, response);
   }
 

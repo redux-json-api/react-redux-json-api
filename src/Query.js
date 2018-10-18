@@ -1,25 +1,15 @@
 /* @flow */
 // Add `strict` once Dispatch type is added
 
-import type { JSONAPIResource, JSONAPIResourceIdentifier } from 'json-api';
+import type { JSONAPIResource } from 'json-api';
 import React, { type Node, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { readEndpoint } from 'redux-json-api';
+import type { Links, CachedResponse } from './types';
 import DataSet from './DataSet';
 import QueryCache from './QueryCache';
 
-type Link = {|
-  load: () => void,
-|};
-
-type Links = { [string]: Link };
-
 type Refetch = () => void;
-
-export type StoredResponse = {|
-  links: Links,
-  resourceIds: Array<JSONAPIResourceIdentifier>,
-|};
 
 type RenderProp = ({
   error?: Error,
@@ -39,7 +29,7 @@ type Props = {|
 type State = {|
   error?: Error,
   loading: boolean,
-  ...StoredResponse,
+  ...CachedResponse,
 |};
 
 export class Query extends PureComponent<Props, State> {
@@ -58,7 +48,7 @@ export class Query extends PureComponent<Props, State> {
     this.loadEndpoint(this.props.endpoint);
   }
 
-  setResponse = ({ resourceIds, links }: StoredResponse) => {
+  setResponse = ({ resourceIds, links }: CachedResponse) => {
     this.setState({
       resourceIds,
       links,
