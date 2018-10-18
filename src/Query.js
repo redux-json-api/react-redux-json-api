@@ -48,6 +48,12 @@ export class Query extends PureComponent<Props, State> {
     this.loadEndpoint(this.props.endpoint);
   }
 
+  get actions() {
+    return {
+      refetch: () => { this.fetchData(this.props.endpoint); },
+    };
+  }
+
   setResponse = ({ resourceIds, links }: CachedResponse) => {
     this.setState({
       resourceIds,
@@ -118,10 +124,6 @@ export class Query extends PureComponent<Props, State> {
     }
   };
 
-  refetch = () => {
-    this.fetchData(this.props.endpoint);
-  };
-
   render() {
     const {
       error,
@@ -133,10 +135,10 @@ export class Query extends PureComponent<Props, State> {
     return (
       <DataSet resourceIds={resourceIds}>
         {({ resources }) => this.props.children({
+          ...this.actions,
           error,
           loading,
           links,
-          refetch: this.refetch,
           resources,
         })}
       </DataSet>

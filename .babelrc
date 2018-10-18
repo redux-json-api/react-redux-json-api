@@ -4,11 +4,13 @@
     "test": {
       "presets": ["env", "flow", "react"],
       "plugins": [
-        "transform-class-properties"
+        "transform-class-properties",
+        "transform-object-rest-spread"
       ]
     }
   },
   "plugins": [
-    "transform-class-properties"
+    "transform-class-properties",
+    "transform-object-rest-spread"
   ]
 }

@@ -17,6 +17,7 @@ export default {
         'external-helpers',
         'transform-class-properties',
         'transform-runtime',
+        'transform-object-rest-spread',
       ],
       runtimeHelpers: true,
     }),
