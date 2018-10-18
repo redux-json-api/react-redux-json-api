@@ -86,7 +86,12 @@ export class Query extends PureComponent<Props, State> {
     }
 
     try {
-      this.setResponse(QueryCache.getEndpointCache(endpoint));
+      const cachedResponse = QueryCache.getEndpointCache(endpoint);
+      // This condition should never be falsy, because QueryCache throws if no
+      // data is stored for given endpoint. But Flow is not able to detect this
+      if (cachedResponse) {
+        this.setResponse(cachedResponse);
+      }
     } catch (_) {
       this.fetchData(endpoint, enableCache);
     }

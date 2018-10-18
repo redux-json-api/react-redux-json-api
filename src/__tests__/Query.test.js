@@ -113,7 +113,7 @@ it('is able to refetch from original endpoint', () => {
       </Query>
     </Provider>,
   );
-  renderRefetch();
+  if (renderRefetch) renderRefetch();
   expect(readEndpoint).toHaveBeenCalledWith('/posts');
   expect(readEndpoint).toHaveBeenCalledTimes(2);
 });
